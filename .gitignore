@@ -143,3 +143,4 @@ cython_debug/
 # Deprecated files and folders
 deprecated/
 /model/dataset/movies.csv
+/model/dataset/ml-latest/
