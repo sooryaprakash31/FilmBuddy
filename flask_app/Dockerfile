@@ -1,17 +1,16 @@
 # Use the official Python image as the base image
 FROM python:3.8-slim
 
-# Set the working directory inside the container
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY requirements.txt requirements.txt
+COPY ./requirements.txt /app/requirements.txt
 
 # Install the required dependencies
-RUN pip install -r requirements.txt
+RUN pip install -r /app/requirements.txt
 
 # Copy the content of the local app directory into the container
-COPY app app
+COPY . /app
 
 # Set environment variables
 ENV FLASK_APP app/init.py

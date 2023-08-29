@@ -6,4 +6,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
+    volumes:
+      - ./app:/app/app/:rw
+
+volumes:
+  app:
 
