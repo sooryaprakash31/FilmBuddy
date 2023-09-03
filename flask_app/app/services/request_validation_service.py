@@ -15,6 +15,17 @@ class RequestValidationService:
         self.schema.update({
             "controller.recommend": {
                 "body": {
+                    "title": {
+                        "type": "string",
+                        "required": True,
+                        "empty": False
+                    },
+                    "year": {
+                        "type": "integer",
+                        "coerce": "to_int",
+                        "required": True,
+                        "empty": False
+                    },
                     "recommendations_count": {
                         "type": "integer",
                         "coerce": "to_int",
