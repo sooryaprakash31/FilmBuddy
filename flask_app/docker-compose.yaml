@@ -8,6 +8,8 @@ services:
       - "5000:5000"
     volumes:
       - ./app:/app/app/:rw
+    env_file:
+      - env/cloud.env
 
 volumes:
   app:
