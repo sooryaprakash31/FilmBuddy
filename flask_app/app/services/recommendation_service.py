@@ -1,6 +1,5 @@
-from typing import Union
-
 import pandas as pd
+from flask import abort
 
 from .data_service import DatasetService
 from ..config import MOVIES_DATASET_FILE_PATH, RATINGS_DATASET_FILE_PATH
@@ -13,9 +12,7 @@ class RecommendationService:
     Recommendation related methods
     """
 
-    def __init__(self, title: str, year: Union[int, str], recommendation_po: RecommendationPo):
-        self.title = title
-        self.year = year
+    def __init__(self, recommendation_po: RecommendationPo):
         self.recommendation_po = recommendation_po
         dataset_service = DatasetService(movies_dataset_file_path=MOVIES_DATASET_FILE_PATH,
                                          ratings_dataset_file_path=RATINGS_DATASET_FILE_PATH)
@@ -54,7 +51,11 @@ class RecommendationService:
         to find 10 movies that are similar to the given movie
         :return: dataframe with 10 recommended movies
         """
-        movie_record = Movies.find_movie(movies_df=self.movies, title=self.title, year=self.year)
+        movie_record = Movies.find_movie(movies_df=self.movies, title=self.recommendation_po.title,
+                                         year=self.recommendation_po.year)
+        if movie_record.empty:
+            abort(404, "Sorry! It looks like I don't know the film you entered. Try a different one")
+
         movie_id = movie_record["movieId"].iloc[0]
 
         # Find the other users who liked the given movie. Call them similar_users

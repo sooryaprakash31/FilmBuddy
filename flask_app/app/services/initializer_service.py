@@ -10,6 +10,8 @@ class InitializerService:
 
     @staticmethod
     def initialize():
+        print("Starting the application. Please wait..")
+
         storage_service = StorageService()
         print("Downloading datasets...", flush=True)
         storage_service.download_all_data()
