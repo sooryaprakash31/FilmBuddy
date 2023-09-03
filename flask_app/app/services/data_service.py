@@ -1,33 +1,25 @@
-import os.path
-
 import pandas as pd
 
-from ..config import APP_ROOT_DIR, DATASETS_DIR
 
+class DatasetService:
+    _instance = None
+    _movies_dataset = None
+    _ratings_dataset = None
 
-class DataService:
-    """
-    Dataset related methods
-    """
+    def __new__(cls, movies_dataset_file_path, ratings_dataset_file_path):
+        if cls._instance is None:
+            cls._instance = super(DatasetService, cls).__new__(cls)
+            cls._movies_dataset = cls._load_dataset(movies_dataset_file_path)
+            cls._ratings_dataset = cls._load_dataset(ratings_dataset_file_path)
+        return cls._instance
 
-    def __init__(self, dataset_file_name: str, dataset_file_extension: str = "csv"):
-        self.dataset_file_name = dataset_file_name
-        self.dataset_file_extension = dataset_file_extension
-
-    def get_dataframe(self):
-        """
-        This method is used to get the dataframe from the datasource
-        :return: dataframe of the dataset
-        """
-        df = self.load_data()
-        return df
-
-    def load_data(self):
-        """
-        This method is used to load the dataset into a dataframe
-        :return:
-        """
-        dataset_file_path = os.path.join(APP_ROOT_DIR, DATASETS_DIR,
-                                         f"{self.dataset_file_name}.{self.dataset_file_extension}")
+    @staticmethod
+    def _load_dataset(dataset_file_path):
         df = pd.read_csv(dataset_file_path)
         return df
+
+    def get_movies_dataset(self):
+        return self._movies_dataset
+
+    def get_ratings_dataset(self):
+        return self._ratings_dataset

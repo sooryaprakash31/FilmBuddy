@@ -8,7 +8,13 @@ SECRET_ACCESS_KEY = get_env("SECRET_ACCESS_KEY")
 REGION_NAME = get_env("REGION_NAME")
 BUCKET_NAME = get_env("BUCKET_NAME")
 
-# APP_ROOT_DIR = os.path.dirname(os.path.abspath(os.path.abspath(os.path.abspath(__file__))))
-APP_ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+APP_ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 DATASETS_DIR = "datasets"
+
+MOVIES_DATASET_NAME = "movies"
+RATINGS_DATASET_NAME = "ratings"
+DATASET_FILE_EXTENSION = "csv"
+
+MOVIES_DATASET_FILE_PATH = os.path.join(APP_ROOT_DIR, DATASETS_DIR, f"{MOVIES_DATASET_NAME}.{DATASET_FILE_EXTENSION}")
+RATINGS_DATASET_FILE_PATH = os.path.join(APP_ROOT_DIR, DATASETS_DIR, f"{RATINGS_DATASET_NAME}.{DATASET_FILE_EXTENSION}")
