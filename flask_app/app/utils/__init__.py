@@ -1,3 +1,4 @@
+import os
 import typing
 
 
@@ -15,3 +16,7 @@ def convert(value: typing.Any, to: str, on_error: str):
             return value
         elif on_error == "raise_exception":
             raise Exception(e)
+
+
+def get_env(key):
+    return os.environ.get(key)
