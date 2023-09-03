@@ -1,7 +1,20 @@
-from ..utils import get_env
+import os
+
+from ..utils.env import get_env
 
 ROOT_DIR = get_env("ROOT_DIR")
 ACCESS_KEY_ID = get_env("ACCESS_KEY_ID")
 SECRET_ACCESS_KEY = get_env("SECRET_ACCESS_KEY")
 REGION_NAME = get_env("REGION_NAME")
 BUCKET_NAME = get_env("BUCKET_NAME")
+
+APP_ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+DATASETS_DIR = "datasets"
+
+MOVIES_DATASET_NAME = "movies"
+RATINGS_DATASET_NAME = "ratings"
+DATASET_FILE_EXTENSION = "csv"
+
+MOVIES_DATASET_FILE_PATH = os.path.join(APP_ROOT_DIR, DATASETS_DIR, f"{MOVIES_DATASET_NAME}.{DATASET_FILE_EXTENSION}")
+RATINGS_DATASET_FILE_PATH = os.path.join(APP_ROOT_DIR, DATASETS_DIR, f"{RATINGS_DATASET_NAME}.{DATASET_FILE_EXTENSION}")

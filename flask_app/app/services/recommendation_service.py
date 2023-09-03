@@ -2,7 +2,8 @@ from typing import Union
 
 import pandas as pd
 
-from .data_service import DataService
+from .data_service import DatasetService
+from ..config import MOVIES_DATASET_FILE_PATH, RATINGS_DATASET_FILE_PATH
 from ..po.recommendation_po import RecommendationPo
 from ..utils.movies import Movies
 
@@ -16,8 +17,12 @@ class RecommendationService:
         self.title = title
         self.year = year
         self.recommendation_po = recommendation_po
-        self.movies = DataService(dataset_name="movies").get_dataframe()
-        self.ratings = DataService(dataset_name="ratings").get_dataframe()
+        dataset_service = DatasetService(movies_dataset_file_path=MOVIES_DATASET_FILE_PATH,
+                                         ratings_dataset_file_path=RATINGS_DATASET_FILE_PATH)
+        movies = dataset_service.get_movies_dataset()
+        ratings = dataset_service.get_ratings_dataset()
+        self.movies = movies.copy()
+        self.ratings = ratings.copy()
 
     def get_recommendations(self):
         """
@@ -39,6 +44,8 @@ class RecommendationService:
         self.movies.head()
 
         recommendations = self.collaborative_filtering()
+        del self.movies
+        del self.ratings
         return recommendations
 
     def collaborative_filtering(self) -> pd.DataFrame:
