@@ -16,8 +16,8 @@ class RecommendationService:
         self.title = title
         self.year = year
         self.recommendation_po = recommendation_po
-        self.movies = DataService(dataset_name="movies").get_dataframe()
-        self.ratings = DataService(dataset_name="ratings").get_dataframe()
+        self.movies = DataService(dataset_file_name="movies").get_dataframe()
+        self.ratings = DataService(dataset_file_name="ratings").get_dataframe()
 
     def get_recommendations(self):
         """

@@ -1,4 +1,8 @@
+import os.path
+
 import pandas as pd
+
+from ..config import APP_ROOT_DIR, DATASETS_DIR
 
 
 class DataService:
@@ -6,8 +10,9 @@ class DataService:
     Dataset related methods
     """
 
-    def __init__(self, dataset_name):
-        self.dataset_name = dataset_name
+    def __init__(self, dataset_file_name: str, dataset_file_extension: str = "csv"):
+        self.dataset_file_name = dataset_file_name
+        self.dataset_file_extension = dataset_file_extension
 
     def get_dataframe(self):
         """
@@ -22,5 +27,7 @@ class DataService:
         This method is used to load the dataset into a dataframe
         :return:
         """
-        df = pd.read_csv(f'/app/assets/{self.dataset_name}.csv')
+        dataset_file_path = os.path.join(APP_ROOT_DIR, DATASETS_DIR,
+                                         f"{self.dataset_file_name}.{self.dataset_file_extension}")
+        df = pd.read_csv(dataset_file_path)
         return df
