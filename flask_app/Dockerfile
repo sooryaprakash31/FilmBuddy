@@ -13,7 +13,7 @@ RUN pip install -r /app/requirements.txt
 COPY . /app
 
 # Set environment variables
-ENV FLASK_APP app/init.py
+ENV FLASK_APP src/init.py
 ENV FLASK_RUN_HOST 0.0.0.0
 
 # Expose the port the app runs on
