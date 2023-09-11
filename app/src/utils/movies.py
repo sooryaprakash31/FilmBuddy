@@ -1,8 +1,8 @@
-
 import re
 from typing import Union
 
 import pandas as pd
+from pandas import DataFrame
 
 
 class Movies:
@@ -77,3 +77,17 @@ class Movies:
             (movies_copy['year'] == year)
             ]
         return movie_record
+
+    @staticmethod
+    def process_movies_dataset(movies: DataFrame):
+        movies["genres"] = movies["genres"].apply(lambda text: Movies.clean_text(text=text,
+                                                                                 replace_string=" "))
+
+        year_re_pattern = r'\((\d{4})\)'
+
+        movies["year"] = movies["title"].apply(lambda text: Movies.find_match(text=text,
+                                                                              re_pattern=year_re_pattern))
+
+        movies["title"] = movies["title"].apply(lambda text: Movies.clean_title(text=text,
+                                                                                re_pattern=year_re_pattern))
+        return movies

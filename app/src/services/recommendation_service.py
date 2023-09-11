@@ -27,18 +27,7 @@ class RecommendationService:
         :return: dataframe with recommendations
         """
 
-        self.movies["genres"] = self.movies["genres"].apply(lambda text: Movies.clean_text(text=text,
-                                                                                           replace_string=" "))
-
-        year_re_pattern = r'\((\d{4})\)'
-
-        self.movies["year"] = self.movies["title"].apply(lambda text: Movies.find_match(text=text,
-                                                                                        re_pattern=year_re_pattern))
-
-        self.movies["title"] = self.movies["title"].apply(lambda text: Movies.clean_title(text=text,
-                                                                                          re_pattern=year_re_pattern))
-
-        self.movies.head()
+        self.movies = Movies.process_movies_dataset(movies=self.movies)
 
         recommendations = self.collaborative_filtering()
         del self.movies
@@ -97,8 +86,10 @@ class RecommendationService:
         records_percentages = records_percentages.sort_values("score", ascending=False)
 
         recommendations = records_percentages. \
-            head(self.recommendation_po.recommendations_count).merge(self.movies, left_index=True, right_on="movieId")
+            head(self.recommendation_po.recommendations_count+1).merge(self.movies, left_index=True, right_on="movieId")
 
         recommendations = recommendations.loc[:, ["title", "year", "genres"]]
+
+        recommendations = recommendations.iloc[1:, :]
 
         return recommendations
