@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./app:/app/app/:rw
+      - ./src:/app/src/:rw
     env_file:
       - env/cloud.env
 
