@@ -35,12 +35,34 @@ class RequestValidationService:
                     "rating_filter": {
                         "type": "float",
                         "coerce": "to_float",
+                        "max": 5.0,
                         "required": False,
                         "empty": False
                     },
                     "popularity_threshold": {
                         "type": "float",
                         "coerce": "to_float",
+                        "required": False,
+                        "empty": False
+                    }
+                }
+            },
+            "controller.search": {
+                "body": {
+                    "title": {
+                        "type": "string",
+                        "required": True,
+                        "empty": False
+                    },
+                    "year": {
+                        "type": "integer",
+                        "coerce": "to_int",
+                        "required": False,
+                        "empty": False
+                    },
+                    "count": {
+                        "type": "integer",
+                        "coerce": "to_int",
                         "required": False,
                         "empty": False
                     }

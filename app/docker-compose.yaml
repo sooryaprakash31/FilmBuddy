@@ -12,5 +12,5 @@ services:
       - env/cloud.env
 
 volumes:
-  app:
+  src:
 
