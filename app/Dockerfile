@@ -12,12 +12,8 @@ RUN pip install -r /app/requirements.txt
 # Copy the content of the local app directory into the container
 COPY . /app
 
-# Set environment variables
-ENV FLASK_APP src/init.py
-ENV FLASK_RUN_HOST 0.0.0.0
-
 # Expose the port the app runs on
-EXPOSE 5000
+EXPOSE 8000
 
 # Run the command to start the app
-CMD ["flask", "run"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "-t", "0", "-w", "1", "run:app"]
