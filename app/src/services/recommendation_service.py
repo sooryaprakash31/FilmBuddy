@@ -1,5 +1,8 @@
+import numpy as np
 import pandas as pd
 from flask import abort
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 from .data_service import DatasetService
 from ..config import MOVIES_DATASET_FILE_PATH, RATINGS_DATASET_FILE_PATH
@@ -20,6 +23,7 @@ class RecommendationService:
         ratings = dataset_service.get_ratings_dataset()
         self.movies = movies.copy()
         self.ratings = ratings.copy()
+        self.movie_record = None
 
     def get_recommendations(self):
         """
@@ -29,7 +33,15 @@ class RecommendationService:
 
         self.movies = Movies.process_movies_dataset(movies=self.movies)
 
-        recommendations = self.collaborative_filtering()
+        self.movie_record = Movies.find_movie(movies_df=self.movies, title=self.recommendation_po.title,
+                                              year=self.recommendation_po.year)
+        if self.movie_record.empty:
+            abort(404, "Sorry! It looks like I don't know the film you entered. Try a different one")
+
+        popular_movies = self.collaborative_filtering()
+        recommendations = self.content_based_filtering(popular_movies)
+
+        del popular_movies
         del self.movies
         del self.ratings
         return recommendations
@@ -40,12 +52,8 @@ class RecommendationService:
         to find 10 movies that are similar to the given movie
         :return: dataframe with 10 recommended movies
         """
-        movie_record = Movies.find_movie(movies_df=self.movies, title=self.recommendation_po.title,
-                                         year=self.recommendation_po.year)
-        if movie_record.empty:
-            abort(404, "Sorry! It looks like I don't know the film you entered. Try a different one")
 
-        movie_id = movie_record["movieId"].iloc[0]
+        movie_id = self.movie_record["movieId"].iloc[0]
 
         # Find the other users who liked the given movie. Call them similar_users
         similar_users = self.ratings[
@@ -85,11 +93,26 @@ class RecommendationService:
 
         records_percentages = records_percentages.sort_values("score", ascending=False)
 
-        recommendations = records_percentages. \
-            head(self.recommendation_po.recommendations_count+1).merge(self.movies, left_index=True, right_on="movieId")
+        recommendations = records_percentages.merge(self.movies, left_index=True,
+                                                    right_on="movieId")
 
         recommendations = recommendations.loc[:, ["title", "year", "genres"]]
 
         recommendations = recommendations.iloc[1:, :]
 
         return recommendations
+
+    def content_based_filtering(self, popular_movies) -> pd.DataFrame:
+
+        genres = self.movie_record["genres"].iloc[0]
+
+        vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+        tfidf = vectorizer.fit_transform(popular_movies["genres"])
+
+        query_vector = vectorizer.transform([genres])
+        similarity = cosine_similarity(query_vector, tfidf).flatten()
+        count = self.recommendation_po.recommendations_count
+        indices = np.argpartition(similarity, -count)[-count:]
+        result = popular_movies.iloc[indices].iloc[::-1]
+
+        return result
