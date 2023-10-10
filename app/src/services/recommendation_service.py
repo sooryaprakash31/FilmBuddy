@@ -31,8 +31,6 @@ class RecommendationService:
         :return: dataframe with recommendations
         """
 
-        self.movies = Movies.process_movies_dataset(movies=self.movies)
-
         self.movie_record = Movies.find_movie(movies_df=self.movies, title=self.recommendation_po.title,
                                               year=self.recommendation_po.year)
         if self.movie_record.empty:
@@ -74,7 +72,7 @@ class RecommendationService:
 
         # Find the movies liked by more than 10 percentage of the similar users
         similar_users_records = similar_users_records[
-            similar_users_records > self.recommendation_po.popularity_threshold]
+            similar_users_records > self.recommendation_po.popularity_percentage]
 
         # Find the other users who liked the movies that are liked by similar_users - call them all_users
         all_users = self.ratings[

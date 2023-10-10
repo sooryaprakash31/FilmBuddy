@@ -39,9 +39,11 @@ class RequestValidationService:
                         "required": False,
                         "empty": False
                     },
-                    "popularity_threshold": {
+                    "popularity_percentage": {
                         "type": "float",
-                        "coerce": "to_float",
+                        "min": 0,
+                        "max": 100,
+                        "coerce": "to_percentage",
                         "required": False,
                         "empty": False
                     }
@@ -93,4 +95,7 @@ class RequestValidator(Validator):
     def _normalize_coerce_to_float(self, value):
         return convert(value=value, to="float", on_error="return_value")
 
+    def _normalize_coerce_to_percentage(self, value):
+        value = convert(value=value, to="float", on_error="return_value")
+        return value / 100
 

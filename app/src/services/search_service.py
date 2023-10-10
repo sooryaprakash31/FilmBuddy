@@ -1,7 +1,6 @@
 from .data_service import DatasetService
 from ..config import MOVIES_DATASET_FILE_PATH, RATINGS_DATASET_FILE_PATH
 from ..po.search_po import SearchPo
-from ..utils.movies import Movies
 
 
 class SearchService:
@@ -15,8 +14,6 @@ class SearchService:
         self.movies = movies.copy()
 
     def get_results(self):
-
-        self.movies = Movies.process_movies_dataset(movies=self.movies)
 
         title_condition = self.movies['title'].str.contains(self.search_po.title, case=False)
 
