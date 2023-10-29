@@ -11,7 +11,8 @@ class Movies:
     @staticmethod
     def find_movie(movies_df: pd.DataFrame, title: str, year: Union[str, int]) -> pd.DataFrame:
         """
-        This method is used to find a movie record in the movies dataset based on the given movie title and year values
+        This method is used to find a movie record in the movies dataset based on the given movie title
+        and year values
         :param movies_df: Movies dataframe
         :param title: movie title
         :param year: year

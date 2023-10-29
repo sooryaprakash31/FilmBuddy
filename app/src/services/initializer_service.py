@@ -6,9 +6,9 @@ from ..services.storage_service import StorageService
 
 
 class InitializerService:
-
-    def __init__(self):
-        pass
+    """
+    This class contains methods related to initialization
+    """
 
     @staticmethod
     def initialize():

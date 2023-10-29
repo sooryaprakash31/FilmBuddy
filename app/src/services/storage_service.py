@@ -15,6 +15,9 @@ from ..config import (
 
 
 class StorageService:
+    """
+    S3 storage related methods
+    """
 
     def __init__(self):
         self.secret_key = SECRET_ACCESS_KEY
@@ -29,6 +32,11 @@ class StorageService:
                                              region_name=self.region)
 
     def download_all_data(self):
+
+        """
+        This method is used to download all the datasets from a directory in S3 Bucket
+        and extract them in local storage
+        """
 
         # List objects in the specified S3 directory
         bucket = self.storage_client.Bucket(self.bucket_name)

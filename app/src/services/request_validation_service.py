@@ -5,6 +5,9 @@ from ..utils import convert
 
 
 class RequestValidationService:
+    """
+    Request validation related methods
+    """
 
     def __init__(self, request):
         self.request = request
@@ -94,6 +97,10 @@ class RequestValidationService:
         return self.__validator(data=data, schema=schema)
 
     def validate_data(self):
+        """
+        This method is used to validate the data against the schema
+        :return: validated data
+        """
         schema = self.schema.get(self.request.endpoint)
         validated_document = {}
         validated_document.update(self.__query_params_validator(schema=schema.get("query_params")))

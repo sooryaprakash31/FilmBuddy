@@ -1,4 +1,5 @@
 from flask import abort
+from pandas import DataFrame
 
 from .data_service import DatasetService
 from ..config import MOVIES_DATASET_FILE_PATH, RATINGS_DATASET_FILE_PATH
@@ -6,6 +7,9 @@ from ..po.search_po import SearchPo
 
 
 class SearchService:
+    """
+    Search related methods
+    """
 
     def __init__(self, search_po: SearchPo):
         self.search_po = search_po
@@ -15,7 +19,11 @@ class SearchService:
         movies = dataset_service.get_movies_dataset()
         self.movies = movies.copy()
 
-    def get_results(self):
+    def get_results(self) -> DataFrame:
+        """
+        This method is used to get search results of films with the given keyword in the title and released year
+        :return: dataframe with search results
+        """
 
         title_condition = self.movies['title'].str.contains(self.search_po.title, case=False)
 

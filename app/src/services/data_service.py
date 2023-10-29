@@ -2,6 +2,10 @@ import pandas as pd
 
 
 class DatasetService:
+    """
+    Datasets related methods
+    Follows singleton pattern to maintain only one instance of the dataset throughout the application
+    """
     _instance = None
     _movies_dataset = None
     _ratings_dataset = None

@@ -25,9 +25,9 @@ class RecommendationService:
         self.ratings = ratings.copy()
         self.movie_record = None
 
-    def get_recommendations(self):
+    def get_recommendations(self) -> pd.DataFrame:
         """
-        This method is used to process the dataset and get recommendations based on input title and year values
+        This method is used to  get recommendations based on input title and year values
         :return: dataframe with recommendations
         """
 
@@ -47,8 +47,8 @@ class RecommendationService:
     def collaborative_filtering(self) -> pd.DataFrame:
         """
         This method is used to perform collaborative filtering on the movies and ratings dataset
-        to find 10 movies that are similar to the given movie
-        :return: dataframe with 10 recommended movies
+        to find movies that are liked by similar users
+        :return: dataframe with movies liked by similar users
         """
 
         movie_id = self.movie_record["movieId"].iloc[0]
@@ -101,6 +101,11 @@ class RecommendationService:
         return recommendations
 
     def content_based_filtering(self, popular_movies) -> pd.DataFrame:
+        """
+        This method is used to perform content based filtering on the movies selected by collaborative filtering
+        to find movies that are similar to the given movie
+        :return: dataframe with similar movies
+        """
 
         genres = self.movie_record["genres"].iloc[0]
 
