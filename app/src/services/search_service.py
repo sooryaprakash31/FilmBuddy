@@ -1,3 +1,5 @@
+from flask import abort
+
 from .data_service import DatasetService
 from ..config import MOVIES_DATASET_FILE_PATH, RATINGS_DATASET_FILE_PATH
 from ..po.search_po import SearchPo
@@ -17,19 +19,16 @@ class SearchService:
 
         title_condition = self.movies['title'].str.contains(self.search_po.title, case=False)
 
-        if self.search_po.year is not None:
-            year_condition = self.movies['year'] == str(self.search_po.year)
-        else:
-            year_condition = True
+        filtered_df = self.movies[title_condition]
 
-        filtered_df = self.movies[title_condition & year_condition]
+        if self.search_po.year is not None:
+            filtered_df = filtered_df[filtered_df['year'] == self.search_po.year]
 
         del self.movies
 
         filtered_df = filtered_df.loc[:, ['title', 'year', 'genres']]
 
+        if filtered_df.empty:
+            abort(404, "Sorry! It looks like I don't know the film you entered. Try a different one")
+
         return filtered_df.head(self.search_po.count)
-
-
-
-

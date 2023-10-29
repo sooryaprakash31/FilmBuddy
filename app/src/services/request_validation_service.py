@@ -14,27 +14,18 @@ class RequestValidationService:
     def update_schema(self):
         self.schema.update({
             "controller.recommend": {
-                "body": {
-                    "title": {
-                        "type": "string",
-                        "required": True,
-                        "empty": False
-                    },
-                    "year": {
-                        "type": "integer",
-                        "coerce": "to_int",
-                        "required": True,
-                        "empty": False
-                    },
+                "query_params": {
                     "recommendations_count": {
                         "type": "integer",
                         "coerce": "to_int",
+                        "min": "1",
                         "required": False,
                         "empty": False
                     },
                     "rating_filter": {
                         "type": "float",
                         "coerce": "to_float",
+                        "min": 0,
                         "max": 5.0,
                         "required": False,
                         "empty": False
@@ -46,11 +37,29 @@ class RequestValidationService:
                         "coerce": "to_percentage",
                         "required": False,
                         "empty": False
+                    },
+                    "title": {
+                        "type": "string",
+                        "required": True,
+                        "empty": False
+                    },
+                    "year": {
+                        "type": "integer",
+                        "coerce": "to_int",
+                        "required": True,
+                        "empty": False
                     }
-                }
+                },
             },
             "controller.search": {
-                "body": {
+                "query_params": {
+                    "count": {
+                        "type": "integer",
+                        "coerce": "to_int",
+                        "min": 1,
+                        "required": False,
+                        "empty": False
+                    },
                     "title": {
                         "type": "string",
                         "required": True,
@@ -62,19 +71,12 @@ class RequestValidationService:
                         "required": False,
                         "empty": False
                     },
-                    "count": {
-                        "type": "integer",
-                        "coerce": "to_int",
-                        "required": False,
-                        "empty": False
-                    }
-                }
+                },
             }
         })
 
-    def __body_validator(self):
-        schema = self.schema.get(self.request.endpoint).get("body")
-        data = self.request.form.to_dict(flat=True)
+    @staticmethod
+    def __validator(data, schema):
         validator = RequestValidator(schema)
         is_validated = validator.validate(data)
 
@@ -83,8 +85,19 @@ class RequestValidationService:
         else:
             return validator.document
 
+    def __body_validator(self, schema):
+        data = self.request.form.to_dict(flat=True)
+        return self.__validator(data=data, schema=schema)
+
+    def __query_params_validator(self, schema):
+        data = self.request.args.to_dict(flat=True)
+        return self.__validator(data=data, schema=schema)
+
     def validate_data(self):
-        return self.__body_validator()
+        schema = self.schema.get(self.request.endpoint)
+        validated_document = {}
+        validated_document.update(self.__query_params_validator(schema=schema.get("query_params")))
+        return validated_document
 
 
 class RequestValidator(Validator):
@@ -98,4 +111,3 @@ class RequestValidator(Validator):
     def _normalize_coerce_to_percentage(self, value):
         value = convert(value=value, to="float", on_error="return_value")
         return value / 100
-

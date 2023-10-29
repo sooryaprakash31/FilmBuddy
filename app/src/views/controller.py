@@ -9,7 +9,7 @@ from ..services.search_service import SearchService
 controller = Blueprint('controller', __name__)
 
 
-@controller.route('/recommend', methods=['POST'])
+@controller.route('/recommend', methods=['GET'])
 def recommend():
     data = RequestValidationService(request=request).validate_data()
 

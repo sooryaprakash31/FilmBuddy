@@ -2,6 +2,7 @@ import os
 
 from ..utils.env import get_env
 
+STORAGE_TYPE = get_env("STORAGE_TYPE")
 ROOT_DIR = get_env("ROOT_DIR")
 ACCESS_KEY_ID = get_env("ACCESS_KEY_ID")
 SECRET_ACCESS_KEY = get_env("SECRET_ACCESS_KEY")

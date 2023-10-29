@@ -1,0 +1,161 @@
+openapi: "3.0.0"
+info:
+  title: "FilmBuddy API Reference"
+  version: "1.0.0"
+  description: "A Film recommendation engine that delivers personalized film recommendations"
+  contact:
+    name: "Soorya Prakash R"
+    email: "sooryaprakash.r31@gmail.com"
+
+servers:
+  - description: Localhost FilmBuddy Server
+    url: http://localhost:8000/filmbuddy/v1/
+
+tags:
+  - name: film
+    description: Endpoints to get results related to films
+paths:
+  /recommend:
+    get:
+      tags:
+        - film
+      summary: "Recommendation endpoint"
+      description: "Get film recommendations related to a film"
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: "The title of the film"
+          required: True
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: "The released year of the film"
+          required: True
+        - in: query
+          name: recommendations_count
+          schema:
+            type: integer
+          description: "The number of recommendations to be returned. Default value: 5"
+        - in: query
+          name: rating_filter
+          schema:
+            type: number
+          description: "The minimum rating (out of 5) to filter the recommendations. Default value: 3"
+        - in: query
+          name: popularity_percentage
+          schema:
+            type: number
+          description: "The popularity of the recommendations in percentage. Default value: 10"
+      responses:
+        '200':
+          description: "Success response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    genres:
+                      type: string
+                      description: "The genres of the recommended film"
+                      example: "Crime Mystery Thriller"
+                    title:
+                      type: string
+                      description: "The title of the recommended film"
+                      example: "Dial M for Murder"
+                    year:
+                      type: number
+                      description: "The released year of the recommended film"
+                      example: 1954
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        popularity_percentage:
+                          type: array
+                          items:
+                            type: string
+                          example: [ "min value is 0" ]
+                        rating_filter:
+                          type: array
+                          items:
+                            type: string
+                          example: [ "min value is 0" ]
+        '404':
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Sorry! It looks like I don't know the film you entered. Try a different one"
+
+  /search:
+    get:
+      tags:
+        - film
+      summary: "Search endpoint"
+      description: "Search for films based on a keyword"
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: "The search keyword of the film"
+          required: True
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: "The released year of the film"
+        - in: query
+          name: count
+          schema:
+            type: integer
+          description: "The number of search results to be returned. Default value: 10"
+      responses:
+        '200':
+          description: "Success response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    genres:
+                      type: string
+                      description: "The genres of the recommended film"
+                      example: "Crime Mystery Thriller"
+                    title:
+                      type: string
+                      description: "The title of the recommended film"
+                      example: "Dial M for Murder"
+                    year:
+                      type: number
+                      description: "The released year of the recommended film"
+                      example: 1954
+        '400':
+          description: "Bad Request"
+        '404':
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Sorry! It looks like I don't know the film you entered. Try a different one"

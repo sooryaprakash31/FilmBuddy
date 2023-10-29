@@ -12,9 +12,9 @@ def invalid_data(error):
             error_list.append(error_message)
     else:
         error_list.append(error.description)
-    return jsonify(error_list), 400
+    return jsonify({"message": error_list}), 400
 
 
 @errors.app_errorhandler(404)
 def not_found(error):
-    return jsonify(error.description), 404
+    return jsonify({"message": error.description}), 404

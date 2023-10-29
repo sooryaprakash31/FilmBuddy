@@ -9,7 +9,7 @@ services:
     volumes:
       - ./src:/app/src/:rw
     env_file:
-      - env/cloud.env
+      - env/storage.env
 
 volumes:
   src:
