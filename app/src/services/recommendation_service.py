@@ -98,6 +98,10 @@ class RecommendationService:
 
         recommendations = recommendations.iloc[1:, :]
 
+        if recommendations.empty:
+            abort(404, "Sorry! I don't have any recommendations for the given configuration. Try changing the "
+                       "popularity_percentage or rating_filter values")
+
         return recommendations
 
     def content_based_filtering(self, popular_movies) -> pd.DataFrame:
